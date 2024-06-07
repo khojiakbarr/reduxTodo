@@ -1,22 +1,26 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getTodos } from "../../Store/TodoThunks/TodoThunks";
 import TodoCard from "../TodoCard/TodoCard";
-import { useSelector } from "react-redux";
 
 export default function TodoList() {
-  const todo = useSelector((state) => state.todo.todo);
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todo.todos);
+  const loading = useSelector((state) => state.todo.loading);
+  const error = useSelector((state) => state.todo.error);
+
   useEffect(() => {
-    console.log(todo);
+    dispatch(getTodos());
+    console.log(todos);
   }, []);
   return (
     <div className="mt-[30px] flex justify-center flex-wrap gap-[15px]">
-      {todo.map((item) => (
-        <TodoCard
-          task={item.task}
-          id={item.id}
-          completed={item.completed}
-          key={item.id}
-        />
-      ))}
+      {loading === "pending" && <h2>Loading...</h2>}
+      {error && <h2>Error: {error} </h2>}
+      {todos &&
+        todos.map((todo) => (
+          <TodoCard id={todo._id} task={todo.task} key={todo._id} />
+        ))}
     </div>
   );
 }
