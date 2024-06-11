@@ -14,7 +14,8 @@ const postTodos = createAsyncThunk(
     try {
       const response = await axios.post(URL, data);
       thunkApi.dispatch(getTodos());
-      return response.data;
+      
+      return response.data; 
     } catch (err) {
       return thunkApi.rejectWithValue(err.response.data);
     }
